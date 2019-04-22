@@ -58,7 +58,7 @@ def itot(img, max_size=None):
     tensor = itot_t(img)
 
     # Add the batch_size dimension
-    #tensor = tensor.unsqueeze(dim=0)
+    tensor = tensor.unsqueeze(dim=0)
     return tensor
 
 # Preprocessing ~ Tensor to Image
@@ -94,32 +94,3 @@ def transfer_color(src, dest):
     return cv2.cvtColor(src_yiq, cv2.COLOR_YCrCb2BGR).clip(0,255)  #4 Convert new image from YIQ back to BGR
 
 
-class ImageFolderWithPaths(datasets.ImageFolder):
-    """Custom dataset that includes image file paths. 
-    Extends torchvision.datasets.ImageFolder()
-    Reference: https://discuss.pytorch.org/t/dataloader-filenames-in-each-batch/4212/2
-    """
-    # override the __getitem__ method. this is the method dataloader calls
-    def __getitem__(self, index):
-        # this is what ImageFolder normally returns 
-        original_tuple = super(ImageFolderWithPaths, self).__getitem__(index)
-
-        # the image file path
-        path = self.imgs[index][0]
-
-        # make a new tuple that includes original and the path
-        tuple_with_path = (*original_tuple, path)
-        return tuple_with_path
-
-# def normalize_batch(batch):
-#     # normalize using imagenet mean and std
-#     mean = batch.new_tensor([0.485, 0.456, 0.406]).view(-1, 1, 1)
-#     std = batch.new_tensor([0.229, 0.224, 0.225]).view(-1, 1, 1)
-#     batch = batch.div_(255.0)
-#     return (batch - mean) / std
-
-# def unnormalize_image(image):
-#     mean = image.new_tensor([0.485, 0.456, 0.406]).view(-1, 1, 1)
-#     std = image.new_tensor([0.229, 0.224, 0.225]).view(-1, 1, 1)
-#     image = image.mul_(255.0)
-#     return ((image + mean) / std).clamp(0,255)

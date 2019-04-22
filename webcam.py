@@ -6,7 +6,6 @@ from imutils import paths
 import argparse
 import itertools
 
-STYLE_TRANSFORM_PATH = "transforms/mosaic_light.pth"
 PRESERVE_COLOR = False
 WIDTH = 1280
 HEIGHT = 720
@@ -17,10 +16,11 @@ ap.add_argument("-m","--models", required=True,
 args = vars(ap.parse_args())
 
 modelPaths = paths.list_files(args['models'], validExts=('.pth',))
-# modelPaths = sorted(list(modelPaths))
+modelPaths = sorted(list(modelPaths))
+
 modelIter = itertools.cycle(modelPaths)
 
-def webcam(style_transform_path, width=1280, height=720):
+def webcam(style_transform_path, width=1200, height=721):
     """
     Captures and saves an image, perform style transfer, and again saves the styled image.
     Reads the styled image and show in window. 
@@ -72,9 +72,13 @@ def webcam(style_transform_path, width=1280, height=720):
             key = cv2.waitKey(1) & 0xFF
             
             if key == ord('n'):
-                modelPath = next(modelIter)
+                modelPath = next(modelIter) 
                 net.load_state_dict(torch.load(modelPath))
                 net = net.to(device)
+
+            if key == ord('y'): #save on pressing 'y' 
+                cv2.imwrite(f'images/capture/c{count}.png',img2)
+            
 
             elif key == ord('q'): 
                 break  # q to quit
@@ -83,4 +87,5 @@ def webcam(style_transform_path, width=1280, height=720):
     cam.release()
     cv2.destroyAllWindows()
 
+# print(next(modelPaths))
 webcam(modelIter, WIDTH, HEIGHT)

@@ -14,10 +14,10 @@ import utils
 TRAIN_IMAGE_SIZE = 256
 DATASET_PATH = "dataset/"
 NUM_EPOCHS = 10
-STYLE_IMAGE_PATH = "images/style_img.jpeg"
+STYLE_IMAGE_PATH = "images/mosaic.jpg"
 BATCH_SIZE = 4 
 CONTENT_WEIGHT = 2e1
-STYLE_WEIGHT = 25e2
+STYLE_WEIGHT = 5
 ADAM_LR = 0.001
 SAVE_MODEL_PATH = "transforms/"
 SAVE_IMAGE_PATH = "images/out/"
@@ -154,7 +154,7 @@ def train():
     # Save TransformerNetwork weights
     TransformerNetwork.eval()
     TransformerNetwork.cpu()
-    final_path = SAVE_MODEL_PATH + "transformer_weight.pth"
+    final_path = SAVE_MODEL_PATH + "mosiac_weight.pth"
     print("Saving TransformerNetwork weights at {}".format(final_path))
     torch.save(TransformerNetwork.state_dict(), final_path)
     print("Done saving final model")
